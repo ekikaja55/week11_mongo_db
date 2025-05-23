@@ -31,7 +31,7 @@ const seeder = async (jumlah_data, db, param = "") => {
     await db.deleteMany({});
     await db.insertMany(dataList);
     return {
-      message: "berhasil insert data",
+      message: `berhasil seed data ${param}`,
       data: dataList,
     };
   } catch (error) {

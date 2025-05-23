@@ -17,10 +17,18 @@ const Dosen = db.collection("Dosen");
 const Matkul = db.collection("MataKuliah");
 const Pengumuman = db.collection("Pengumuman");
 
+const createIndexes = async () => {
+  await Mhs.createIndex({ nrp: 1 }, { unique: true });
+  await Dosen.createIndex({ nid: 1 }, { unique: true });
+  await Matkul.createIndex({ kode: 1 }, { unique: true });
+  await Pengumuman.createIndex({ kode: 1 }, { unique: true });
+  console.log("berhasil create index");
+}
 const connect = async () => {
   try {
     await client.connect(dbname);
     console.log("berhasil connect ke mongo db semoga");
+    await createIndexes();
   } catch (error) {
     console.log(error);
     await client.close();
@@ -28,24 +36,21 @@ const connect = async () => {
 };
 
 const mhsRoute = () => {
-
-  //query find All, dan find one by nrp lewat query param
   app.get("/api/mhs", async (req, res) => {
     const { nrp } = req.query;
-    let result;    
+    let result;
     if (!nrp) {
       result = await Mhs.find().toArray();
       return res.status(200).json(result);
     }
-    result = await Mhs.findOne({ nrp: nrp });
+    result = await Mhs.findOne({ nrp: Number(nrp) });
     if (!result) {
       return res.status(200).json({ message: `nrp: ${nrp} tidak ditemukan ` });
     }
     return res.status(200).json(result);
   });
 
-  app.post("/api/mhs/insert", async (req, res) => {
-    await Mhs.createIndex({ nrp: 1 }, { unique: true });
+  app.get("/api/mhs/seeder", async (req, res) => {
     const result = await seeder(10, Mhs, "mhs");
     if (result === undefined) {
       return res.status(404).json("param tidak boleh kosong");
@@ -58,18 +63,47 @@ const mhsRoute = () => {
 };
 
 const dosenRoute = () => {
-  app.get("/api/dosen/", async (req, res) => {});
-  app.post("/api/dosen/insert", async (req, res) => {});
+  app.get("/api/dosen/", async (req, res) => { });
+  app.get("/api/dosen/seeder", async (req, res) => {
+    const result = await seeder(10, Dosen, "dosen");
+    if (result === undefined) {
+      return res.status(404).json("param tidak boleh kosong");
+
+    }
+    return res.status(200).json({
+      message: result.message,
+      result: result.data,
+    });
+  });
 };
 
 const matkulRoute = () => {
-  app.get("/api/matkul/", async (req, res) => {});
-  app.post("/api/matkul/insert", async (req, res) => {});
+  app.get("/api/matkul/", async (req, res) => { });
+  app.get("/api/matkul/seeder", async (req, res) => {
+    const result = await seeder(10, Matkul, "matkul");
+    if (result === undefined) {
+      return res.status(404).json("param tidak boleh kosong");
+    }
+    return res.status(200).json({
+      message: result.message,
+      result: result.data,
+    });
+  });
 };
 
 const pengumumanRoute = () => {
-  app.get("/api/pengumuman/", (req, res) => {});
-  app.post("/api/pengumuman/insert", (req, res) => {});
+  app.get("/api/pengumuman/", async (req, res) => { });
+  app.get("/api/pengumuman/seeder", async (req, res) => {
+    const result = await seeder(10, Pengumuman, "pengumuman");
+    if (result === undefined) {
+      return res.status(404).json("param tidak boleh kosong");
+    }
+    return res.status(200).json({
+      message: result.message,
+      result: result.data,
+    });
+
+  });
 };
 
 const main = async () => {
