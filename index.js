@@ -37,19 +37,31 @@ const connect = async () => {
 
 const mhsRoute = () => {
 
-  //find all dan finone berdasarkan query nrp atau sks
   app.get("/api/mhs", async (req, res) => {
     const { nrp, sks } = req.query;
-    let param = nrp ?? sks;
+    let param = nrp || sks;
     let result;
-    if (!nrp && !sks) {
-      result = await Mhs.find().toArray();
-      return res.status(200).json(result);
+
+    if (!nrp && !sks || nrp && sks) {
+      result = await Mhs.find({}, { projection: { "createdAt": 0, "lastModified": 0 } }).sort({ sks: 1 }).toArray();
+      return res.status(200).json({
+        param: "Find All",
+        data: result
+      });
+    } else if (!sks && nrp) {
+      result = await Mhs.findOne({ nrp: Number(nrp) }, { projection: { "createdAt": 0, "lastModified": 0 } })
+      if (!result) {
+        return res.status(200).json({ message: `nrp : ${nrp} tidak ditemukan ` });
+      }
+    } else if (!nrp && sks) {
+      result = await Mhs.find({
+        sks: { $lt: Number(sks) }
+      }, { projection: { "createdAt": 0, "lastModified": 0 } }).sort({ sks: 1 }).toArray()
+      if (!result) {
+        return res.status(200).json({ message: `sks : ${sks} tidak ditemukan ` });
+      }
     }
-    result = await Mhs.findOne({ sks: Number(param) }) ?? await Mhs.findOne({ nrp: Number(param) }) ;
-    if (!result) {
-      return res.status(200).json({ message: `${param} tidak ditemukan ` });
-    }
+
     return res.status(200).json({
       param: param,
       data: result

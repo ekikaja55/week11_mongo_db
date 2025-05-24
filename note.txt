@@ -1,2 +1,16 @@
-note
-1. 
+note 
+
+untuk url nya bisa diakses semua method url nya GET
+total untuk mhs,dosen,matkul,pengumuman punya 1 insert seeder sama 5 query mongoDB
+
+http://localhost:3000/api/mhs/seeder -> untuk nge seed 10 data mhs
+
+http://localhost:3000/api/mhs -> untuk  melakukan 3 query mongoDB, aku pake req.query dengan ketentuan :
+1. kalo gada query sama sekali otomatis find() sort sks ascending 
+2. query nrp otomatis findOne() by nrp sort sks ascending
+3. query sks otomatis find() by sks mhs yang lebih kecil dari query sks sort sks asc
+
+
+
+
+
