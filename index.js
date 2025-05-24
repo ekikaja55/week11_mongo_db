@@ -36,19 +36,28 @@ const connect = async () => {
 };
 
 const mhsRoute = () => {
+
+  //find all dan finone berdasarkan query nrp atau sks
   app.get("/api/mhs", async (req, res) => {
-    const { nrp } = req.query;
+    const { nrp, sks } = req.query;
+    let param = nrp ?? sks;
     let result;
-    if (!nrp) {
+    if (!nrp && !sks) {
       result = await Mhs.find().toArray();
       return res.status(200).json(result);
     }
-    result = await Mhs.findOne({ nrp: Number(nrp) });
+    result = await Mhs.findOne({ sks: Number(param) }) ?? await Mhs.findOne({ nrp: Number(param) }) ;
     if (!result) {
-      return res.status(200).json({ message: `nrp: ${nrp} tidak ditemukan ` });
+      return res.status(200).json({ message: `${param} tidak ditemukan ` });
     }
-    return res.status(200).json(result);
+    return res.status(200).json({
+      param: param,
+      data: result
+    });
+
+
   });
+
 
   app.get("/api/mhs/seeder", async (req, res) => {
     const result = await seeder(10, Mhs, "mhs");
@@ -63,7 +72,9 @@ const mhsRoute = () => {
 };
 
 const dosenRoute = () => {
-  app.get("/api/dosen/", async (req, res) => { });
+  app.get("/api/dosen/", async (req, res) => {
+
+  });
   app.get("/api/dosen/seeder", async (req, res) => {
     const result = await seeder(10, Dosen, "dosen");
     if (result === undefined) {
