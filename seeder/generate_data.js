@@ -56,13 +56,31 @@ const generateDosen = () => {
   })
 };
 
-const generateMatkul = () => {
+const generateMatkul = (daftarNama) => {
+
+  const angkaRandom = Math.floor(Math.random() * daftarNama.length)
+  const angkaRandom2 = Math.floor(Math.random() * daftarNama.length)
+
+
+  const dataPengajar = [
+    {
+      nid: daftarNama[angkaRandom].nid,
+      nama: daftarNama[angkaRandom].nama
+    },
+    {
+      nid: daftarNama[angkaRandom2].nid,
+      nama: daftarNama[angkaRandom2].nama
+    }
+  ]
+
+
   const angka = faker.number.int({ min: 1, max: 9999 }).toString();
   const kode = `MK${angka.padStart(4, "0000")}`;
   return ({
     _id: new ObjectId(),
     kode: kode,
     nama: `${faker.lorem.slug(2)}`,
+    data_pengajar: dataPengajar.map((item) => { return item }),
     sks: faker.number.int({ min: 1, max: 24 }),
     createdAt: new Date(),
     lastModified: new Date()

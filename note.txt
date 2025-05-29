@@ -3,12 +3,53 @@ note
 untuk url nya bisa diakses semua method url nya GET
 total untuk mhs,dosen,matkul,pengumuman punya 1 insert seeder sama 5 query mongoDB
 
-http://localhost:3000/api/mhs/seeder -> untuk nge seed 10 data mhs
+
+
+http://localhost:3000/api/mhs/seeder -> untuk nge seed 40 data mhs
 
 http://localhost:3000/api/mhs -> untuk  melakukan 3 query mongoDB, aku pake req.query dengan ketentuan :
 1. kalo gada query sama sekali otomatis find() sort sks ascending 
 2. query nrp otomatis findOne() by nrp sort sks ascending
-3. query sks otomatis find() by sks mhs yang lebih kecil dari query sks sort sks asc
+3. query sks otomatis find() less than equal sks, sort by sks asc
+4. kalo nrp & sks ada otomatis find() kayak nomor 1
+
+http://localhost:3000/api/mhs/notelp -> untuk  melakukan 1 query mongoDB cari Mhs by req.params 
+
+
+===================================================================================================
+
+http://localhost:3000/api/dosen/seeder -> untuk nge seed 40 data dosen
+
+http://localhost:3000/api/dosen -> untuk  melakukan 3 query mongoDB, aku pake req.query dengan ketentuan :
+1. kalo gada query sama sekali otomatis find()  
+2. query nid otomatis findOne() by nid
+3. query gender otomatis find() by gender
+
+http://localhost:3000/api/dosen/:notelp -> untuk  melakukan 1 query mongoDB cari dosen by req.params 
+
+
+===================================================================================================
+
+http://localhost:3000/api/matkul/seeder -> untuk nge seed 40 data matkul
+
+http://localhost:3000/api/matkul -> untuk  melakukan 3 query mongoDB, aku pake req.query dengan ketentuan:
+1. kalo gada query sama sekali otomatis find()  
+2. query kode otomatis findOne() by kode
+3. query sks otomatis find() less that equal sks, sort by sks asc
+
+http://localhost:3000/api/matkul/:nama_pengajar -> untuk  melakukan 1 query mongoDB cari matkul by req.params 
+
+===================================================================================================
+
+http://localhost:3000/api/pengumuman/seeder -> untuk nge seed 40 data matkul
+
+http://localhost:3000/api/pengumuman -> untuk  melakukan 3 query mongoDB, aku pake req.query dengan ketentuan:
+1. kalo gada query sama sekali otomatis find()  
+2. query kode otomatis findOne() by kode
+3. query sks otomatis find() less that equal sks, sort by sks asc
+
+http://localhost:3000/api/pengumuman/:nama_pengajar -> untuk  melakukan 1 query mongoDB cari matkul by req.params 
+
 
 
 

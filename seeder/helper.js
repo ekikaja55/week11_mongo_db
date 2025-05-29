@@ -5,7 +5,8 @@ const {
   generatePengumuman,
 } = require("./generate_data");
 
-const seeder = async (jumlah_data, db, param = "") => {
+const seeder = async (jumlah_data, db, param = "", daftarNama = []) => {
+  
   try {
     const dataList = [];
     for (let i = 0; i < jumlah_data; i++) {
@@ -18,7 +19,7 @@ const seeder = async (jumlah_data, db, param = "") => {
           data = generateDosen();
           break;
         case "matkul":
-          data = generateMatkul();
+          data = generateMatkul(daftarNama);
           break;
         case "pengumuman":
           data = generatePengumuman();
