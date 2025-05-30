@@ -252,8 +252,65 @@ const pengumumanRoute = () => {
     });
 
   });
-  app.get("/api/pengumuman/", async (req, res) => { });
+  app.get("/api/pengumuman/", async (req, res) => {
+    const { judul, sumber } = req.query
+    const param = judul || sumber
+    let result;
 
+    if ((!judul && !sumber) || (judul && sumber)) {
+      result = await Pengumuman.find({}, {
+        projection: {
+          createdAt: 0,
+          lastModified: 0
+        }
+      }).toArray()
+      return res.status(200).json({
+        param: "Find All",
+        result: result
+      })
+    } else if (!sumber && judul) {
+      result = await Pengumuman.findOne({ judul: judul }, {
+        projection: {
+          createdAt: 0,
+          lastModified: 0
+        }
+      })
+      if (!result) {
+        return res.status(404).json({ message: `${judul} tidak ditemukan` })
+
+      }
+    } else if (!judul && sumber) {
+      result = await Pengumuman.find({ sumber: sumber }, {
+        projection: {
+          createdAt: 0,
+          lastModified: 0
+        }
+      }).toArray()
+      if (!result) {
+        return res.status(404).json({ message: `${sumber} tidak ditemukan` })
+
+      }
+    }
+    return res.status(200).json({
+      param: param,
+      result: result
+    })
+  });
+
+  app.get("/api/pengumuman/:kode", async (req, res) => {
+    const { kode } = req.params
+    const result = await Pengumuman.findOne({ kode: kode }, {
+      projection: {
+        createdAt: 0,
+        lastModified: 0
+      }
+    })
+    if (!result) {
+      return res.status(404).json({ message: `${kode} tidak ditemukan` })
+    }
+    return res.status(200).json(result)
+
+  })
 };
 
 const main = async () => {
